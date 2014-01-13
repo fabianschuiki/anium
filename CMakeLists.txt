@@ -17,3 +17,5 @@ if (Cairo_FOUND)
 else()
 	message(STATUS "Not building test-cairo (cairo library missing)")
 endif()
+
+add_executable(test-event test/event.cpp)
