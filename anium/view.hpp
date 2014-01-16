@@ -5,6 +5,8 @@
 
 namespace anium {
 
+using namespace gamma::convenience;
+
 struct view
 {
 	typedef boost::shared_ptr<view> ptr;

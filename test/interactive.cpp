@@ -1,7 +1,13 @@
 /* Copyright (c) 2014 Fabian Schuiki */
 #include <GLFW/glfw3.h>
 #include <cairo/cairo.h>
+#include <anium/window.hpp>
+#include <anium/stack.hpp>
+#include <anium/button.hpp>
+#include <anium/renderer.hpp>
 #include <iostream>
+
+using namespace gamma::convenience;
 
 static void gl_prepare_draw(GLFWwindow* window)
 {
@@ -38,18 +44,28 @@ int main(int argc, char** argv)
 	// Make the window's OpenGL context current.
 	glfwMakeContextCurrent(window);
 
+	// Create a user interface hierarchy.
+	anium::window::ptr aw(new anium::window);
+	anium::stack::ptr as(new anium::stack);
+	aw->content = as;
+	anium::button::ptr ab0(new anium::button);
+	anium::button::ptr ab1(new anium::button);
+	as->subviews.push_back(ab0);
+	as->subviews.push_back(ab1);
+
+	aw->position = vector2f(100,100);
+	aw->size = vector2f(200,200);
+
+	// Initialize the renderer.
+	anium::renderer::ptr rndr = anium::renderer::make(aw);
+
 	// Enter and stay in the main loop until the user closes the window.
 	while (!glfwWindowShouldClose(window))
 	{
 		gl_prepare_draw(window);
 
 		glPushAttrib(GL_CURRENT_BIT);
-		glColor3f(1,1,1);
-		glBegin(GL_TRIANGLES);
-		glVertex2f(100,100);
-		glVertex2f(100,200);
-		glVertex2f(200,200);
-		glEnd();
+		rndr->draw();
 		glPopAttrib();
 
 		// Swap buffers and wait for events.
